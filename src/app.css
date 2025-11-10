@@ -8,6 +8,6 @@
 }
 
 .grid-border > * {
-    background-color: var(--color-dark-blue-2);
+    background-color: var(--color-dark-blue-1);
     padding: .25rem;
 }
