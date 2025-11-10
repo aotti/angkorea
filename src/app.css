@@ -1,1 +1,13 @@
 @import 'tailwindcss';
+
+@theme {
+    --color-dark-blue-1: #363062;
+    --color-dark-blue-2: #435585;
+    --color-dark-blue-3: #818FB4;
+    --color-dark-blue-4: #F5E8C7;
+}
+
+.grid-border > * {
+    background-color: var(--color-dark-blue-2);
+    padding: .25rem;
+}
