@@ -17,6 +17,12 @@
             "buses": ["Bis 1", "Bis 2"],
             "depart": [10, 11],
             "arrive": [11, 12]
+        },
+        {
+            "route": "D-E",
+            "buses": ["Bis 1", "Bis 2"],
+            "depart": [10.45, 11.25],
+            "arrive": [12.10, 12.55]
         }
     ]
 }
