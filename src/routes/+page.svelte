@@ -5,6 +5,15 @@
     // states
     let currentRoute = $state(0)
     let currentStation = $state(0)
+    let currentTime = $state(8)
+
+    // time
+    const timeList: Record<string, string> = {
+        "8": "08:00", "8.5": "08:30",
+        "9": "09:00", "9.5": "09:30",
+        "10": "10:00", "10.5": "10:30",
+        "11": "11:00", "11.5": "11:30",
+    }
 
     // station
     // svelte-ignore state_referenced_locally
@@ -40,12 +49,18 @@
         const select = ev.currentTarget
         select.classList.remove('text-black')
         select.blur()
-        // update current route
-        switch (select.value) {
-            case 'A-B': currentRoute = 0; break
-            case 'B-C': currentRoute = 1; break
-            case 'C-D': currentRoute = 2; break
-            default: currentRoute = 0; break
+        // update current route 
+        if(select.id.match('route')) {
+            switch (select.value) {
+                case 'A-B': currentRoute = 0; break
+                case 'B-C': currentRoute = 1; break
+                case 'C-D': currentRoute = 2; break
+                default: currentRoute = 0; break
+            }
+        }
+        // update current time
+        else if(select.id.match('time')) {
+            currentTime = +select.value
         }
     }
 </script>
@@ -71,8 +86,7 @@
                     <label for="time_input"> waktu </label>
                     <select id="time_input" class="w-32 border rounded-md px-1 text-center cursor-pointer" 
                     onfocus={focusTimeOrRoute} onblur={blurTimeOrRoute} onchange={changeTimeOrRoute}>
-                        <option value="7"> 07:00 </option>
-                        <option value="8"> 08:00 </option>
+                        <option value="8" selected> 08:00 </option>
                         <option value="9"> 09:00 </option>
                         <option value="10"> 10:00 </option>
                     </select>
@@ -108,14 +122,17 @@
                 {#if scheduleList[currentRoute].route === stationList.join('-')}
                 {@const currentSchedule = scheduleList[currentRoute]}
                     {#each currentSchedule.buses as bus, i}
-                        <p class="bus"> {currentSchedule.buses[i]} </p>
-                        <p class="schedule col-span-3">
-                            {#if currentStation === 0}
-                                {`jalan ${currentSchedule.depart[i]}`}
-                            {:else}
-                                {`tiba ${currentSchedule.arrive[i]}`}
-                            {/if}
-                        </p>
+                    <!-- translate depart & arrive time -->
+                    {@const departTime = timeList[currentSchedule.depart[i]]}
+                    {@const arriveTime = timeList[currentSchedule.arrive[i]]}
+                        <!-- filter schedule by time -->
+                        {#if currentTime <= currentSchedule.depart[i]}
+                            <!-- set html -->
+                            <p class="bus"> {currentSchedule.buses[i]} </p>
+                            <p class="schedule col-span-3">
+                                {currentStation === 0 ? `jalan ${departTime}` : `tiba ${arriveTime}`}
+                            </p>
+                        {/if}
                     {/each}
                 {/if}
             </div>
